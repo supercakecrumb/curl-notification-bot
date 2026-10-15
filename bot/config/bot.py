@@ -13,5 +13,5 @@ listen = os.environ.get("LISTEN", "0.0.0.0")
 cert = os.environ.get("CERT")
 priv = os.environ.get("PRIV")
 webhook_url_path = os.environ.get("WEBHOOK_URL_PATH", "/api/web-hook/")
-use_webhook = os.environ.get("USE_WEBHOOK", False)
-admin_password = os.environ.get("ADMIN_PASSWORD", "roottoor")
+use_webhook = os.environ.get("USE_WEBHOOK", "false").lower() in {"true", "1", "yes"}
+admin_password = os.environ.get("ADMIN_PASSWORD")

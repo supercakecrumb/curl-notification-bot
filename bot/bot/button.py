@@ -7,7 +7,7 @@ MENU_CALLBACK_PREFIX = "test_"
 def setup_button(bot: myTeleBot):
     @bot.message_handler(commands=['button'])
     def button_pressed(message: types.Message):
-        bot.logger.info(f'{message.from_user.username} sent {message.text}')
+        bot.logger.info("Received bot command or message")
         markup = menu_markup()
         bot.send_message(message.chat.id, "Press a button if you want:", reply_markup=markup)
 

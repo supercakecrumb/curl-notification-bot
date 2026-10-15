@@ -22,7 +22,7 @@ class myTeleBot(telebot.TeleBot):
             out_photos.append(InputMediaPhoto(_file))
         out_photos[-1].caption = caption
         sent_data = self.send_media_group(chat_id, out_photos)
-        self.logger.info(f'photos {sent_data[0]} was sent')
+        self.logger.info("Photo group sent")
         for i in range(len(photos[:10])):
             if not photos[i].telegram_id:
                 photos[i].telegram_id = sent_data[i].photo[0].file_id

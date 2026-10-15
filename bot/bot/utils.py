@@ -13,6 +13,9 @@ def init_util_bot(bot: myTeleBot):
   
 def admin_only(func):
     def wrapper(message):
+        if message.chat.type != "private":
+            botForUtil.send_message(message.chat.id, "Use a private chat for admin commands.")
+            return
         client = get_user_by_tg_id(message.from_user.id)
         if client is None or (not client.is_admin):
             botForUtil.send_message(message.chat.id, "You can't do it!")
@@ -41,4 +44,12 @@ def generate_password(length=20):
 
 
 def authenticate(telegram_id: str, password: str):
-    return True
+    if not isinstance(password, str) or not password:
+        return False
+    try:
+        user_id = int(telegram_id)
+    except (TypeError, ValueError):
+        return False
+    user = get_user_by_tg_id(user_id)
+    return bool(user and user.password and secrets.compare_digest(
+        password.encode(), user.password.encode()))

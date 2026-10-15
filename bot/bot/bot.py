@@ -14,17 +14,23 @@ def init_bot(bot: myTeleBot):
 
 
 def init_flask(bot: myTeleBot, app: Flask, listen: str, port: int):
+    app.config['MAX_CONTENT_LENGTH'] = 64 * 1024
+
     @app.route('/', methods=['GET', 'HEAD'])
     def index():
         return 'hey, howrudoing?'
 
     @app.route('/send_notification', methods=['POST'])
     def send_notification():
-        data = request.get_json()
+        data = request.get_json(silent=True)
+        if not isinstance(data, dict):
+            return "Invalid JSON", 400
         text = data.get('text')
         telegram_id = data.get('telegram_id')
         telegram_password = data.get('password')
 
+        if not isinstance(text, str) or not text or len(text) > 4096:
+            return "Invalid message", 400
         if authenticate(telegram_id, telegram_password):
             send_telegram_notification(telegram_id, text)
             return 'Notification sent successfully'
@@ -36,7 +42,7 @@ def init_flask(bot: myTeleBot, app: Flask, listen: str, port: int):
 
     app.run(host=listen,
             port=port,
-            debug=True)
+            debug=False)
 
 
 def init_message_handlers(bot: myTeleBot):
